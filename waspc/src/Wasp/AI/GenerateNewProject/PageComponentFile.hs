@@ -88,13 +88,13 @@ partitionComponentFileByImports componentContent = (waspImportLines, nonWaspImpo
         span isImportLineOrEmpty $ lines $ T.unpack componentContent
 
     isImportLineOrEmpty l = let l' = trim l in "import" `isPrefixOf` l' || null l'
-    isWaspImportLine = ("@wasp" `isInfixOf`)
+    isWaspImportLine l = ("\"wasp/" `isInfixOf` l) || ("'wasp/" `isInfixOf` l)
     cleanUpImportLines = filter (not . null) . fmap trim
 
--- | Given a list of all operations in the app, it returns a list of all possible @@wasp imports
+-- | Given a list of all operations in the app, it returns a list of all possible wasp imports
 -- that a Page could import. Those are imports for the specified operations, but also some general
 -- imports like login/logouts, hooks, ... .
--- Each entry in the returned map is one possible @@wasp import, where key is imported symbol
+-- Each entry in the returned map is one possible wasp import, where key is imported symbol
 -- while import statement is the value.
 getAllPossibleWaspJsClientImports :: [Operation] -> M.Map String String
 getAllPossibleWaspJsClientImports operations = M.fromList $ possibleUnchangingImports ++ map makeOperationImport operations
